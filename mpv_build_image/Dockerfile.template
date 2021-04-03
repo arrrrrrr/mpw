@@ -1,0 +1,28 @@
+FROM ubuntu:groovy as base
+
+# customize the apt mirror
+RUN cat /etc/apt/sources.list \
+    | sed -e 's/\(deb http:[\/]*\)\(archive\)/\1<!template=apt.mirror>.\2/g' > /etc/apt/sources.list.tmp \
+    && mv /etc/apt/sources.list.tmp /etc/apt/sources.list
+RUN apt-get update && apt-get install -y \
+    <!template=apt.packages>
+    && rm -rf /var/lib/apt/lists/* \
+    && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8 \
+    && update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+ENV LANG=en_US.utf8 PATH=<!template=mxe.source>/usr/bin/:$PATH
+
+# split into a multicontainer
+FROM base as mxebase
+RUN git clone <!template=mxe.repository> <!template=mxe.source>
+WORKDIR <!template=mxe.source>
+RUN make cc --jobs=4 <!template=mxe.make_opts>
+ENV PATH=<!template=mxe.source>/usr/bin/:$PATH
+
+FROM mxebase as mxebuild
+RUN make <!template=mxe.make_list> --jobs=4 <!template=mxe.make_opts>
+
+FROM mxebuild as mpvbase
+RUN git clone <!template=mpv.repository> <!template=mpv.source>
+WORKDIR <!template=mpv.source>
+RUN python3 ./bootstrap.py
+ENTRYPOINT [ "/bin/bash", "-c" ]

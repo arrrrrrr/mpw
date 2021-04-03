@@ -1,0 +1,54 @@
+{ 
+    "apt": {
+        "mirror": "au",
+        "packages": [
+           "autoconf",
+           "automake",
+           "autopoint",
+           "bison",
+           "build-essential",
+           "curl",
+           "flex",
+           "gettext",
+           "git",
+           "gperf",
+           "gnupg",
+           "intltool",
+           "libgdk-pixbuf2.0-dev",
+           "libltdl-dev",
+           "libssl-dev",
+           "libtool-bin",
+           "libxml-parser-perl",
+           "locales",
+           "lzip",
+           "openssh-client",
+           "openssl",
+           "pkg-config",
+           "python3",
+           "python3-pip",
+           "p7zip-full",
+           "ruby",
+           "unzip",
+           "wget "
+        ]
+    },
+    "mxe": {
+        "repository": "https://github.com/mxe/mxe.git",
+        "source": "/opt/mxe",
+        "make_list": [
+            "ffmpeg",
+            "libass",
+            "jpeg",
+            "lua",
+            "luajit"
+        ],
+        "make_opts": {
+            "JOBS": "4",
+            "MXE_TARGETS": "x86_64-w64-mingw32.static"
+        }
+    },
+    "mpv": {
+        "repository": "https://github.com/mpv-player/mpv.git",
+        "source": "/opt/mpv"
+    }
+}
